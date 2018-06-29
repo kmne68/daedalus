@@ -14,8 +14,8 @@ import javax.swing.JFrame;
  */
 public class Window {
     
-    public static final int WIDTH = 300;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 307; // slightly larger than 300 to make up for lines
+    public static final int HEIGHT = 630;
     private Board board;
     
     private JFrame window;
@@ -30,7 +30,8 @@ public class Window {
         window.setLocationRelativeTo(null);
         
         board = new Board();
-        window.add(board);   
+        window.add(board);
+        window.addKeyListener(board);
         
         window.setVisible(true);
 
