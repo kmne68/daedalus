@@ -87,7 +87,7 @@ public class Board extends JPanel implements KeyListener {
             {1, 1}   // O-shape
         }, this);
         
-        currentShape = shapes[6];
+        currentShape = shapes[4];
     }
 
     
@@ -128,6 +128,8 @@ public class Board extends JPanel implements KeyListener {
             currentShape.setDeltaX(1);
         if(e.getKeyCode() == KeyEvent.VK_DOWN)
             currentShape.speedDown();
+        if(e.getKeyCode() == KeyEvent.VK_UP)
+            currentShape.rotate();
     }
 
     @Override
