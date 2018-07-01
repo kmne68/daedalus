@@ -26,7 +26,7 @@ public class Board extends JPanel implements KeyListener {
     private final int blockSize = 30;
     private final int boardWidth = 10;
     private final int boardHeight = 20;
-    private int[][] board = new int[boardWidth][boardHeight];
+    private int[][] board = new int[boardHeight][boardWidth];
     
     private Shape[] shapes = new Shape[7];
     private Shape currentShape;
@@ -87,7 +87,8 @@ public class Board extends JPanel implements KeyListener {
             {1, 1}   // O-shape
         }, this);
         
-        currentShape = shapes[4];
+        // currentShape = shapes[4];
+        setNextShape();
     }
 
     
@@ -100,6 +101,12 @@ public class Board extends JPanel implements KeyListener {
         super.paintComponent(g);
         
         currentShape.render(g);
+        
+        for(int row = 0; row < board.length; row++) {
+            for(int col = 0; col < board[row].length; col++)
+                if(board[row][col] != 0)
+                    g.drawImage(blocks.getSubimage(0, 0, blockSize, blockSize), col * blockSize, row * blockSize, null);
+        }
         
         
         // g.drawRect(100, 100, 50, 50);
@@ -119,6 +126,11 @@ public class Board extends JPanel implements KeyListener {
         return blockSize;
     }
 
+    
+    public int[][] getBoard() {
+        return board;
+    }
+    
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -142,5 +154,15 @@ public class Board extends JPanel implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+    public void setNextShape() {
+        
+        int index = (int)(Math.random() * shapes.length);
+        
+        Shape newShape = new Shape(shapes[index].getBlock(), shapes[index].getCoords(), this);
+        
+        currentShape = newShape;
     }
 }
