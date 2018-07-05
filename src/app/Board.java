@@ -26,7 +26,7 @@ public class Board extends JPanel implements KeyListener {
     private final int blockSize = 30;
     private final int boardWidth = 10;
     private final int boardHeight = 20;
-    private int[][] board = new int[boardHeight][boardWidth];
+    private int[][] boardGrid = new int[boardHeight][boardWidth];
     
     private Shape[] shapes = new Shape[7];
     private Shape currentShape;
@@ -47,7 +47,8 @@ public class Board extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 update();
-                repaint();            }            
+                repaint();
+            }            
         });
         
         timer.start();
@@ -102,9 +103,9 @@ public class Board extends JPanel implements KeyListener {
         
         currentShape.render(g);
         
-        for(int row = 0; row < board.length; row++) {
-            for(int col = 0; col < board[row].length; col++)
-                if(board[row][col] != 0)
+        for(int row = 0; row < boardGrid.length; row++) {
+            for(int col = 0; col < boardGrid[row].length; col++)
+                if(boardGrid[row][col] != 0)
                     g.drawImage(blocks.getSubimage(0, 0, blockSize, blockSize), col * blockSize, row * blockSize, null);
         }
         
@@ -128,7 +129,7 @@ public class Board extends JPanel implements KeyListener {
 
     
     public int[][] getBoard() {
-        return board;
+        return boardGrid;
     }
     
 

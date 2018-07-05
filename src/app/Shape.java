@@ -17,7 +17,7 @@ public class Shape {
     private BufferedImage block;
     private int[][] coords;
     private Board board;
-    private int x, y;
+    private int startX, startY;
     private int deltaX = 0;
     private long time, lastTime;
 
@@ -37,8 +37,8 @@ public class Shape {
         lastTime = System.currentTimeMillis();
 
         // location coordinates so shape starts in the middle of the board
-        x = 4;
-        y = 0;
+        startX = 4;
+        startY = 0;
     }
 
     public void update() {
@@ -47,43 +47,39 @@ public class Shape {
         lastTime = System.currentTimeMillis();
 
         if (collision) {
-            for (int row = 0; row < coords.length; row++) 
-                for (int col = 0; col < coords[row].length; col++) 
-                    if (coords[row][col] != 0) {
-                        board.getBoard()[y + row][x + col] = 1;
-                    }
-                
-            
-
+            for (int row = 0; row < coords.length; row++)               // we have coords.length rows
+                for (int col = 0; col < coords[row].length; col++)      // we have  row columns               
+                    if (coords[row][col] != 0) {                        // if the square of the piece is not a 0
+                        board.getBoard()[startY + row][startX + col] = 1;         // draw it on the board 
+                    }                                           
             board.setNextShape();
         }
 
-        // x = 4, delta is based on left and right clicks, coord is 2, 3, or 4 depending on currentShape's coords array
-        if (!(x + deltaX + coords[0].length > 10) && !(x + deltaX < 0)) {
+        // startX = 4, delta is based on left and right clicks, coord is 2, 3, or 4 depending on currentShape's coords array
+        if (!(startX + deltaX + coords[0].length > 10) && !(startX + deltaX < 0)) {
             
             for(int row = 0; row < coords.length; row++)
                 for(int col = 0; col < coords[row].length; col++)
                     if(coords[row][col] != 0) {
-                        if(board.getBoard()[y + row][x + deltaX + col] != 0)
+                        if(board.getBoard()[startY + row][startX + deltaX + col] != 0)
                             moveX = false;
                     }
             
             if(moveX)
-                x += deltaX;
+                startX += deltaX;
         }
 
-        if (!(y + 1 + coords.length > 20)) {
-
+        if (!(startY + 1 + coords.length > 20)) {
             for (int row = 0; row < coords.length; row++) 
                 for (int col = 0; col < coords[row].length; col++) 
                     if (coords[row][col] != 0) {
                         
-                        if(board.getBoard()[y + row + 1][col + x] != 0)
+                        if(board.getBoard()[startY + row + 1][col + startX] != 0)
                             collision = true;
                         
                     }  
                         if (time > currentSpeed) {
-                            y++;
+                            startY++;
                             time = 0;
                         }       
         } else {
@@ -99,8 +95,8 @@ public class Shape {
         for (int row = 0; row < coords.length; row++) {
             for (int col = 0; col < coords[row].length; col++) {
                 if (coords[row][col] != 0) {
-                    g.drawImage(block, col * board.getBlockSize() + x * board.getBlockSize(),
-                            row * board.getBlockSize() + y * board.getBlockSize(), null);
+                    g.drawImage(block, col * board.getBlockSize() + startX * board.getBlockSize(),
+                            row * board.getBlockSize() + startY * board.getBlockSize(), null);
                 }
             }
         }
@@ -120,7 +116,7 @@ public class Shape {
 
         rotatedMatrix = getReverseMatrix(rotatedMatrix);
 
-        if (x + rotatedMatrix[0].length > 10 || y + rotatedMatrix.length > 20) {
+        if (startX + rotatedMatrix[0].length > 10 || startY + rotatedMatrix.length > 20) {
             return;
         }
 
@@ -130,6 +126,8 @@ public class Shape {
     private int[][] getTranspose(int[][] matrix) {
 
         int[][] newMatrix = new int[matrix[0].length][matrix.length];
+        
+        System.out.println("matrix[0].length = " + matrix[0].length + " ; matrix.length = " + matrix.length);
 
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
