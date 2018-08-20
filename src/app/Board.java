@@ -2,6 +2,8 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+
+ * Based on: https://www.youtube.com/watch?v=KD7wHKN22DQ
  */
 package app;
 
@@ -34,6 +36,7 @@ public class Board extends JPanel implements KeyListener {
     private Timer timer;
     private final int FPS = 60;
     private final int delay = 1000/FPS;
+    private boolean gameOver = false;
     
     public Board() {
         
@@ -56,37 +59,37 @@ public class Board extends JPanel implements KeyListener {
         // shapes
         shapes[0] = new Shape(blocks.getSubimage(0, 0, blockSize, blockSize), new int[][] {
             {1, 1, 1, 1} // I-shape
-            }, this);
+            }, this, 1);
         
         shapes[1] = new Shape(blocks.getSubimage(blockSize, 0, blockSize, blockSize), new int[][] {
             {1, 1, 0},
             {0, 1, 1}   // Z-shape
-        }, this);
+        }, this, 2);
         
         shapes[2] = new Shape(blocks.getSubimage(blockSize * 2, 0, blockSize, blockSize), new int[][] {
             {0, 1, 1},
             {1, 1, 0}   // S-shape
-        }, this);
+        }, this, 3);
         
         shapes[3] = new Shape(blocks.getSubimage(blockSize * 3, 0, blockSize, blockSize), new int[][] {
             {1, 1, 1},
             {0, 0, 1}   // J-shape
-        }, this);
+        }, this, 4);
         
         shapes[4] = new Shape(blocks.getSubimage(blockSize * 4, 0, blockSize, blockSize), new int[][] {
             {1, 1, 1},
             {0, 1, 0}   // T-shape
-        }, this);
+        }, this, 5);
         
         shapes[5] = new Shape(blocks.getSubimage(blockSize * 5, 0, blockSize, blockSize), new int[][] {
             {1, 0, 0},
             {1, 1, 1}   // L-shape
-        }, this);
+        }, this, 6);
         
         shapes[6] = new Shape(blocks.getSubimage(blockSize * 6, 0, blockSize, blockSize), new int[][] {
             {1, 1},
             {1, 1}   // O-shape
-        }, this);
+        }, this, 7);
         
         // currentShape = shapes[4];
         setNextShape();
@@ -95,6 +98,9 @@ public class Board extends JPanel implements KeyListener {
     
     public void update() {
         currentShape.update();
+        
+        if(gameOver)
+            timer.stop();
     }
 
     public void paintComponent(Graphics g) {
@@ -106,7 +112,7 @@ public class Board extends JPanel implements KeyListener {
         for(int row = 0; row < boardGrid.length; row++) {
             for(int col = 0; col < boardGrid[row].length; col++)
                 if(boardGrid[row][col] != 0)
-                    g.drawImage(blocks.getSubimage(0, 0, blockSize, blockSize), col * blockSize, row * blockSize, null);
+                    g.drawImage(blocks.getSubimage((boardGrid[row][col] - 1) * blockSize, 0, blockSize, blockSize), col * blockSize, row * blockSize, null);
         }
         
         
@@ -162,8 +168,17 @@ public class Board extends JPanel implements KeyListener {
         
         int index = (int)(Math.random() * shapes.length);
         
-        Shape newShape = new Shape(shapes[index].getBlock(), shapes[index].getCoords(), this);
+        Shape newShape = new Shape(shapes[index].getBlock(), shapes[index].getCoords(), this, shapes[index].getColor());
         
         currentShape = newShape;
+        
+        // test for game over (start position blocked)
+        for(int row = 0; row < currentShape.getCoords().length; row++)
+            for(int col = 0; col < currentShape.getCoords()[row].length; col++)
+                if(currentShape.getCoords()[row][col] != 0) {
+                    
+                    if(boardGrid[row][col + 4] != 0)         // 4 is the start x position
+                        gameOver = true;
+                }
     }
 }

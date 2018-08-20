@@ -24,13 +24,16 @@ public class Shape {
     private int normalSpeed = 600;
     private int speedDown = 60;
     private int currentSpeed;
+    private int color;
+    
     private boolean collision = false;
     private boolean moveX = false;
 
-    public Shape(BufferedImage block, int[][] coords, Board board) {
+    public Shape(BufferedImage block, int[][] coords, Board board, int color) {
         this.block = block;
         this.coords = coords;
         this.board = board;
+        this.color = color;
 
         currentSpeed = normalSpeed;
         time = 0;
@@ -47,11 +50,12 @@ public class Shape {
         lastTime = System.currentTimeMillis();
 
         if (collision) {
-            for (int row = 0; row < coords.length; row++)               // we have coords.length rows
-                for (int col = 0; col < coords[row].length; col++)      // we have  row columns               
-                    if (coords[row][col] != 0) {                        // if the square of the piece is not a 0
-                        board.getBoard()[startY + row][startX + col] = 1;         // draw it on the board 
-                    }                                           
+            for (int row = 0; row < coords.length; row++)                       // we have coords.length rows
+                for (int col = 0; col < coords[row].length; col++)              // we have  row columns               
+                    if (coords[row][col] != 0) {                                // if the square of the piece is not a 0
+                        board.getBoard()[startY + row][startX + col] = color;         // draw it on the board 
+                    }       
+            checkLine();
             board.setNextShape();
         }
 
@@ -100,7 +104,26 @@ public class Shape {
                 }
             }
         }
-
+    }
+    
+    
+    private void checkLine() {
+        
+        int height = board.getBoard().length - 1;
+        
+        for(int i = height; i > 0; i--) {
+            
+            int count = 0;
+            for(int j = 0; j < board.getBoard()[0].length; j++) {
+                
+                if(board.getBoard()[i][j] != 0)
+                    count++;
+                
+                board.getBoard()[height][j] = board.getBoard()[i][j];
+            }
+            if(count < board.getBoard()[0].length)
+                height--;
+        }
     }
 
     /*
@@ -110,6 +133,9 @@ public class Shape {
      */
     public void rotate() {
 
+        if(collision)
+            return;
+        
         int[][] rotatedMatrix = null;
 
         rotatedMatrix = getTranspose(coords);
@@ -118,6 +144,15 @@ public class Shape {
 
         if (startX + rotatedMatrix[0].length > 10 || startY + rotatedMatrix.length > 20) {
             return;
+        }
+        
+        for(int row = 0; row < rotatedMatrix.length; row++) {
+           for(int col = 0; col < rotatedMatrix[0].length; col++) {
+               
+               if(board.getBoard()[startY + row][startX + col] != 0) {
+                   return;
+               }
+           }
         }
 
         coords = rotatedMatrix;
@@ -174,5 +209,11 @@ public class Shape {
     public int[][] getCoords() {
 
         return coords;
+    }
+    
+    
+    public int getColor() {
+        
+        return color;
     }
 }
