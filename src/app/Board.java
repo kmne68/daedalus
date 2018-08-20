@@ -28,7 +28,7 @@ public class Board extends JPanel implements KeyListener {
     private final int blockSize = 30;
     private final int boardWidth = 10;
     private final int boardHeight = 20;
-    private int[][] boardGrid = new int[boardHeight][boardWidth];
+    private int[][] boardGrid = new int[boardHeight][boardWidth];   // the grid that covers the board
     
     private Shape[] shapes = new Shape[7];
     private Shape currentShape;
@@ -49,7 +49,7 @@ public class Board extends JPanel implements KeyListener {
         timer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                update();
+                boardUpdate();
                 repaint();
             }            
         });
@@ -96,7 +96,7 @@ public class Board extends JPanel implements KeyListener {
     }
 
     
-    public void update() {
+    public void boardUpdate() {
         currentShape.update();
         
         if(gameOver)

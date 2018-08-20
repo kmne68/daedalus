@@ -46,9 +46,10 @@ public class Shape {
 
     public void update() {
 
-        time += System.currentTimeMillis() - lastTime;
+        time += System.currentTimeMillis() - lastTime;  // this would be better called timeSinceLast
         lastTime = System.currentTimeMillis();
 
+        // if there has been a collision, draw the piece on the board and set up the next piece
         if (collision) {
             for (int row = 0; row < coords.length; row++)                       // we have coords.length rows
                 for (int col = 0; col < coords[row].length; col++)              // we have  row columns               
@@ -60,26 +61,28 @@ public class Shape {
         }
 
         // startX = 4, delta is based on left and right clicks, coord is 2, 3, or 4 depending on currentShape's coords array
-        if (!(startX + deltaX + coords[0].length > 10) && !(startX + deltaX < 0)) {
+        if (!(startX + deltaX + coords[0].length > 10) && !(startX + deltaX < 0)) {  // make sure we are still within the board's boundaries
             
             for(int row = 0; row < coords.length; row++)
                 for(int col = 0; col < coords[row].length; col++)
-                    if(coords[row][col] != 0) {
-                        if(board.getBoard()[startY + row][startX + deltaX + col] != 0)
-                            moveX = false;
+                    if(coords[row][col] != 0) {  // if the block isn't zero
+                        if(board.getBoard()[startY + row][startX + deltaX + col] != 0)  // if grid square is not empty
+                            moveX = false;                                              // we cannot move in the X direction
                     }
             
-            if(moveX)
-                startX += deltaX;
+            if(moveX)               // if the grid square is empty then we can move...
+                startX += deltaX;   // ...so startX changes by deltaX
         }
 
-        if (!(startY + 1 + coords.length > 20)) {
+        if (!(startY + 1 + coords.length > 20)) {   // have we reached the bottom of the board?
             for (int row = 0; row < coords.length; row++) 
                 for (int col = 0; col < coords[row].length; col++) 
                     if (coords[row][col] != 0) {
                         
-                        if(board.getBoard()[startY + row + 1][col + startX] != 0)
-                            collision = true;
+                        if(board.getBoard()[startY + row + 1][col + startX] != 0) {
+                            System.out.println("startY = " + startY + "; startX = " + startX);  // startX and startY are based on now not the beginning of the
+                            collision = true;                                                   // pieces life cycle
+                        }
                         
                     }  
                         if (time > currentSpeed) {
