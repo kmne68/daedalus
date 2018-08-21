@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 public class Shape {
 
     private BufferedImage block;
-    private int[][] coords;
+    private int[][] shapeBlock;     // formerly called 'coords'
     private Board board;
     private int startX, startY;
     private int deltaX = 0;
@@ -29,13 +29,15 @@ public class Shape {
     private boolean collision = false;
     private boolean moveX = false;
 
-    public Shape(BufferedImage block, int[][] coords, Board board, int color) {
+    
+    // if a shapeBlock = 1, it is a block in the shape (colored) if zero, it is not and has no color
+    public Shape(BufferedImage block, int[][] shapeBlock, Board board, int color) {
         this.block = block;
-        this.coords = coords;
+        this.shapeBlock = shapeBlock;
         this.board = board;
         this.color = color;
 
-        currentSpeed = normalSpeed;
+        currentSpeed = normalSpeed;     // manipulate for increasing challenge level
         time = 0;
         lastTime = System.currentTimeMillis();
 
@@ -51,21 +53,21 @@ public class Shape {
 
         // if there has been a collision, draw the piece on the board and set up the next piece
         if (collision) {
-            for (int row = 0; row < coords.length; row++)                       // we have coords.length rows
-                for (int col = 0; col < coords[row].length; col++)              // we have  row columns               
-                    if (coords[row][col] != 0) {                                // if the square of the piece is not a 0
-                        board.getBoard()[startY + row][startX + col] = color;         // draw it on the board 
+            for (int row = 0; row < shapeBlock.length; row++)                       // we have coords.length rows
+                for (int col = 0; col < shapeBlock[row].length; col++)              // we have  row columns               
+                    if (shapeBlock[row][col] != 0) {                                // if the square of the piece is not a 0
+                        board.getBoard()[startY + row][startX + col] = color;       // draw it on the board 
                     }       
             checkLine();
             board.setNextShape();
         }
 
         // startX = 4, delta is based on left and right clicks, coord is 2, 3, or 4 depending on currentShape's coords array
-        if (!(startX + deltaX + coords[0].length > 10) && !(startX + deltaX < 0)) {  // make sure we are still within the board's boundaries
+        if (!(startX + deltaX + shapeBlock[0].length > 10) && !(startX + deltaX < 0)) {  // make sure we are still within the board's boundaries
             
-            for(int row = 0; row < coords.length; row++)
-                for(int col = 0; col < coords[row].length; col++)
-                    if(coords[row][col] != 0) {  // if the block isn't zero
+            for(int row = 0; row < shapeBlock.length; row++)
+                for(int col = 0; col < shapeBlock[row].length; col++)
+                    if(shapeBlock[row][col] != 0) {  // if the block isn't zero
                         if(board.getBoard()[startY + row][startX + deltaX + col] != 0)  // if grid square is not empty
                             moveX = false;                                              // we cannot move in the X direction
                     }
@@ -74,10 +76,10 @@ public class Shape {
                 startX += deltaX;   // ...so startX changes by deltaX
         }
 
-        if (!(startY + 1 + coords.length > 20)) {   // have we reached the bottom of the board?
-            for (int row = 0; row < coords.length; row++) 
-                for (int col = 0; col < coords[row].length; col++) 
-                    if (coords[row][col] != 0) {
+        if (!(startY + 1 + shapeBlock.length > 20)) {   // have we reached the bottom of the board?
+            for (int row = 0; row < shapeBlock.length; row++) 
+                for (int col = 0; col < shapeBlock[row].length; col++) 
+                    if (shapeBlock[row][col] != 0) {
                         
                         if(board.getBoard()[startY + row + 1][col + startX] != 0) {
                             System.out.println("startY = " + startY + "; startX = " + startX);  // startX and startY are based on now not the beginning of the
@@ -99,9 +101,9 @@ public class Shape {
 
     public void render(Graphics g) {
 
-        for (int row = 0; row < coords.length; row++) {
-            for (int col = 0; col < coords[row].length; col++) {
-                if (coords[row][col] != 0) {
+        for (int row = 0; row < shapeBlock.length; row++) {
+            for (int col = 0; col < shapeBlock[row].length; col++) {
+                if (shapeBlock[row][col] != 0) {
                     g.drawImage(block, col * board.getBlockSize() + startX * board.getBlockSize(),
                             row * board.getBlockSize() + startY * board.getBlockSize(), null);
                 }
@@ -141,7 +143,7 @@ public class Shape {
         
         int[][] rotatedMatrix = null;
 
-        rotatedMatrix = getTranspose(coords);
+        rotatedMatrix = getTranspose(shapeBlock);
 
         rotatedMatrix = getReverseMatrix(rotatedMatrix);
 
@@ -158,7 +160,7 @@ public class Shape {
            }
         }
 
-        coords = rotatedMatrix;
+        shapeBlock = rotatedMatrix;
     }
 
     private int[][] getTranspose(int[][] matrix) {
@@ -184,9 +186,9 @@ public class Shape {
 
         // e.g. matrix = {1, 1, 1}, {1, 0, 0} -- matrix.length = 3;
         for (int i = 0; i < middle; i++) {
-            int[] m = matrix[i];                   // if i = 0, m = {1, 1, 1}
-            matrix[i] = matrix[matrix.length - i - 1]; // matrix[0] = matrix[3 - 0 - 1 = 2]
-            matrix[matrix.length - i - 1] = m;     // matrix[3 - 1 - 1 = 1] = m
+            int[] m = matrix[i];                        // if i = 0, m = {1, 1, 1}
+            matrix[i] = matrix[matrix.length - i - 1];  // matrix[0] = matrix[3 - 0 - 1 = 2]
+            matrix[matrix.length - i - 1] = m;          // matrix[3 - 1 - 1 = 1] = m
         }
         return matrix;
     }
@@ -209,9 +211,10 @@ public class Shape {
         return block;
     }
 
-    public int[][] getCoords() {
+    // formerly called getCoords()
+    public int[][] getShapeBlock() {
 
-        return coords;
+        return shapeBlock;
     }
     
     

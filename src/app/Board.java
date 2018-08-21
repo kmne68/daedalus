@@ -168,17 +168,17 @@ public class Board extends JPanel implements KeyListener {
         
         int index = (int)(Math.random() * shapes.length);
         
-        Shape newShape = new Shape(shapes[index].getBlock(), shapes[index].getCoords(), this, shapes[index].getColor());
+        Shape newShape = new Shape(shapes[index].getBlock(), shapes[index].getShapeBlock(), this, shapes[index].getColor());
         
         currentShape = newShape;
         
         // test for game over (start position blocked)
-        for(int row = 0; row < currentShape.getCoords().length; row++)
-            for(int col = 0; col < currentShape.getCoords()[row].length; col++)
-                if(currentShape.getCoords()[row][col] != 0) {
+        for(int row = 0; row < currentShape.getShapeBlock().length; row++)
+            for(int col = 0; col < currentShape.getShapeBlock()[row].length; col++)
+                if(currentShape.getShapeBlock()[row][col] != 0) {
                     
-                    if(boardGrid[row][col + 4] != 0)         // 4 is the start x position
-                        gameOver = true;
+                    if(boardGrid[row][col + 4] != 0)         // 4 is the start x position and if it is not empty (i.e. equal to zero, then
+                        gameOver = true;                     // the pieces have reached the top and the game is over
                 }
     }
 }
