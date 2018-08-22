@@ -103,6 +103,7 @@ public class Board extends JPanel implements KeyListener {
             timer.stop();
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         
         super.paintComponent(g);
@@ -111,8 +112,16 @@ public class Board extends JPanel implements KeyListener {
         
         for(int row = 0; row < boardGrid.length; row++) {
             for(int col = 0; col < boardGrid[row].length; col++)
-                if(boardGrid[row][col] != 0)
+                if(boardGrid[row][col] != 0) { // for all nonzero squares...
+                    // drawImage takes an image, in this case a subimage defined by x, y, width and height
+                    // for each column of the blocks image we count across the row and multiply by the blocksize to get the value 
+                    // the y value is zero because the blocks image has only one row
+                    // blocks.getSubimage((boardGrid[row][col] - 1 is how we determine which color to paint a boardGrid square
+                    //
+                    System.out.println("boardgrid.length: " + boardGrid.length);
+                    System.out.println("boardgrid[row][col]: " + (boardGrid[row][col] - 1) + " row: " + row + " col: " + col);
                     g.drawImage(blocks.getSubimage((boardGrid[row][col] - 1) * blockSize, 0, blockSize, blockSize), col * blockSize, row * blockSize, null);
+                }
         }
         
         
