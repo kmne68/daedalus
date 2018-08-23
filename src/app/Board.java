@@ -102,11 +102,24 @@ public class Board extends JPanel implements KeyListener {
         if(gameOver)
             timer.stop();
     }
+    
 
     @Override
     public void paintComponent(Graphics g) {
         
         super.paintComponent(g);
+        
+        
+        // draw horizontal grid lines
+        for(int i = 0; i < boardHeight; i++) {
+            g.drawLine(0, i*blockSize, boardWidth * blockSize, i * blockSize);
+        }
+        
+        // draw vertical gridlines
+        for(int j = 0; j < boardWidth; j++) {
+            g.drawLine(j * blockSize, 0, j * blockSize, boardHeight * blockSize);
+        }        
+        
         
         currentShape.render(g);
         
@@ -117,25 +130,9 @@ public class Board extends JPanel implements KeyListener {
                     // for each column of the blocks image we count across the row and multiply by the blocksize to get the value 
                     // the y value is zero because the blocks image has only one row
                     // blocks.getSubimage((boardGrid[row][col] - 1 is how we determine which color to paint a boardGrid square
-                    //
-                    System.out.println("boardgrid.length: " + boardGrid.length);
-                    System.out.println("boardgrid[row][col]: " + (boardGrid[row][col] - 1) + " row: " + row + " col: " + col);
                     g.drawImage(blocks.getSubimage((boardGrid[row][col] - 1) * blockSize, 0, blockSize, blockSize), col * blockSize, row * blockSize, null);
                 }
         }
-        
-        
-        // g.drawRect(100, 100, 50, 50);
-        // g.drawImage(blocks, 0, 0, null);
-        
-        for(int i = 0; i < boardHeight; i++) {
-            g.drawLine(0, i*blockSize, boardWidth * blockSize, i * blockSize);
-        }
-        
-        for(int j = 0; j < boardWidth; j++) {
-            g.drawLine(j * blockSize, 0, j * blockSize, boardHeight * blockSize);
-        }
-        
     }
     
     public int getBlockSize() {
@@ -184,10 +181,13 @@ public class Board extends JPanel implements KeyListener {
         // test for game over (start position blocked)
         for(int row = 0; row < currentShape.getShapeBlock().length; row++)
             for(int col = 0; col < currentShape.getShapeBlock()[row].length; col++)
-                if(currentShape.getShapeBlock()[row][col] != 0) {
+                if(currentShape.getShapeBlock()[row][col] != 0)
+                {
                     
-                    if(boardGrid[row][col + 4] != 0)         // 4 is the start x position and if it is not empty (i.e. equal to zero, then
+                    if(boardGrid[row][col + 4] != 0) {         // 4 is the start x position and if it is not empty (i.e. equal to zero, then
                         gameOver = true;                     // the pieces have reached the top and the game is over
+                        System.out.println("Game Over!");
+                    }
                 }
     }
 }
