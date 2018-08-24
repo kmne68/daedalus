@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 public class Shape {
 
     private BufferedImage block;
-    private int[][] shapeBlock;     // formerly called 'coords'
+    private int[][] shapeBlocks;     // formerly called 'coords'
     private Board board;
     private int startX, startY;
     private int deltaX = 0;
@@ -31,9 +31,9 @@ public class Shape {
 
     
     // if a shapeBlock = 1, it is a block in the shape (colored) if zero, it is not and has no color
-    public Shape(BufferedImage block, int[][] shapeBlock, Board board, int color) {
+    public Shape(BufferedImage block, int[][] shapeBlocks, Board board, int color) {
         this.block = block;
-        this.shapeBlock = shapeBlock;
+        this.shapeBlocks = shapeBlocks;
         this.board = board;
         this.color = color;
 
@@ -53,9 +53,9 @@ public class Shape {
 
         // if there has been a collision, draw the piece on the board and set up the next piece
         if (collision) {
-            for (int row = 0; row < shapeBlock.length; row++)                       // we have coords.length rows
-                for (int col = 0; col < shapeBlock[row].length; col++)              // we have  row columns               
-                    if (shapeBlock[row][col] != 0) {                                // if the square of the piece is not a 0
+            for (int row = 0; row < shapeBlocks.length; row++)                       // for shapeBlocks that do not extend beyond 
+                for (int col = 0; col < shapeBlocks[row].length; col++)              // we have  row columns               
+                    if (shapeBlocks[row][col] != 0) {                                // if the square of the piece is not a 0
                         board.getBoard()[startY + row][startX + col] = color;       // draw it on the board 
                     }       
             checkLine();
@@ -63,11 +63,11 @@ public class Shape {
         }
 
         // startX = 4, delta is based on left and right clicks, coord is 2, 3, or 4 depending on currentShape's coords array
-        if (!(startX + deltaX + shapeBlock[0].length > 10) && !(startX + deltaX < 0)) {  // make sure we are still within the board's boundaries
+        if (!(startX + deltaX + shapeBlocks[0].length > 10) && !(startX + deltaX < 0)) {  // make sure we are still within the board's boundaries
             
-            for(int row = 0; row < shapeBlock.length; row++)
-                for(int col = 0; col < shapeBlock[row].length; col++)
-                    if(shapeBlock[row][col] != 0) {  // if the block isn't zero
+            for(int row = 0; row < shapeBlocks.length; row++)
+                for(int col = 0; col < shapeBlocks[row].length; col++)
+                    if(shapeBlocks[row][col] != 0) {  // if the block isn't zero
                         if(board.getBoard()[startY + row][startX + deltaX + col] != 0)  // if grid square is not empty
                             moveX = false;                                              // we cannot move in the X direction
                     }
@@ -76,14 +76,14 @@ public class Shape {
                 startX += deltaX;   // ...so startX changes by deltaX
         }
 
-        if (!(startY + 1 + shapeBlock.length > 20)) {   // have we reached the bottom of the board?
-            for (int row = 0; row < shapeBlock.length; row++) 
-                for (int col = 0; col < shapeBlock[row].length; col++) 
-                    if (shapeBlock[row][col] != 0) {
+        if (!(startY + 1 + shapeBlocks.length > 20)) {   // have we reached the bottom of the board?
+            for (int row = 0; row < shapeBlocks.length; row++) 
+                for (int col = 0; col < shapeBlocks[row].length; col++) 
+                    if (shapeBlocks[row][col] != 0) {
                         
                         if(board.getBoard()[startY + row + 1][col + startX] != 0) {
                             System.out.println("startY = " + startY + "; startX = " + startX);  // startX and startY are based on now not the beginning of the
-                            collision = true;                                                   // pieces life cycle
+                            collision = true;                                                   // piece's life cycle
                         }
                         
                     }  
@@ -101,9 +101,9 @@ public class Shape {
 
     public void render(Graphics g) {
 
-        for (int row = 0; row < shapeBlock.length; row++) {
-            for (int col = 0; col < shapeBlock[row].length; col++) {
-                if (shapeBlock[row][col] != 0) {
+        for (int row = 0; row < shapeBlocks.length; row++) {
+            for (int col = 0; col < shapeBlocks[row].length; col++) {
+                if (shapeBlocks[row][col] != 0) {
                     g.drawImage(block, col * board.getBlockSize() + startX * board.getBlockSize(),
                             row * board.getBlockSize() + startY * board.getBlockSize(), null);
                 }
@@ -143,7 +143,7 @@ public class Shape {
         
         int[][] rotatedMatrix = null;
 
-        rotatedMatrix = getTranspose(shapeBlock);
+        rotatedMatrix = getTranspose(shapeBlocks);
 
         rotatedMatrix = getReverseMatrix(rotatedMatrix);
 
@@ -160,7 +160,7 @@ public class Shape {
            }
         }
 
-        shapeBlock = rotatedMatrix;
+        shapeBlocks = rotatedMatrix;
     }
 
     private int[][] getTranspose(int[][] matrix) {
@@ -214,7 +214,7 @@ public class Shape {
     // formerly called getCoords()
     public int[][] getShapeBlock() {
 
-        return shapeBlock;
+        return shapeBlocks;
     }
     
     
