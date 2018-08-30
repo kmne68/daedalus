@@ -4,8 +4,10 @@
  * and open the template in the editor.
  * https://www.youtube.com/watch?v=KD7wHKN22DQ
  */
-package app;
+package gui;
 
+import app.Board;
+import java.awt.BorderLayout;
 import javax.swing.JFrame;
 
 /**
@@ -15,8 +17,11 @@ import javax.swing.JFrame;
 public class Window {
     
     public static final int WIDTH = 307; // slightly larger than 300 to make up for lines
-    public static final int HEIGHT = 630;
+    public static final int HEIGHT = 735;
     private Board board;
+    private StatsPanel stats;
+    private GraphicsPanel graphics;
+    private TopPanel top;
     
     private JFrame window;
     
@@ -29,8 +34,21 @@ public class Window {
         window.setResizable(false);
         window.setLocationRelativeTo(null);
         
+        stats = new StatsPanel();
+        graphics = new GraphicsPanel();
+        top = new TopPanel();
         board = new Board();
-        window.add(board);
+        
+        
+        window.setLayout(new BorderLayout());
+        
+        window.add(top, BorderLayout.NORTH);
+        window.add(stats, BorderLayout.WEST);
+        window.add(stats, BorderLayout.EAST);
+        window.add(board, BorderLayout.SOUTH);
+               
+        
+    //    window.add(board);
         window.addKeyListener(board);
         
         window.setVisible(true);
