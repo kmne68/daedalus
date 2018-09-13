@@ -11,6 +11,7 @@ package gui;
  * and open the template in the editor.
  */
 
+import app.Board;
 import java.awt.*;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -70,19 +71,36 @@ public class Layout {
         pane.add(graphics, top);
 
         // Game panel
-        JPanel game = new JPanel();
-        game.setPreferredSize(new Dimension(400, 600));
-        game.setBorder(BorderFactory.createBevelBorder(0, Color.ORANGE, Color.RED));
-        if (shouldFill) {
-            //natural height, maximum width
-            gamePanel.fill = GridBagConstraints.HORIZONTAL;
-        }
+    //    JPanel game = new JPanel();
+        Board board = new Board();
+        
+        board.setPreferredSize(new Dimension(300, 600));
+        board.addKeyListener(board);
+        board.setBorder(BorderFactory.createBevelBorder(0, Color.ORANGE, Color.RED));
+//        if (shouldFill) {
+//            //natural height, maximum width
+//            gamePanel.fill = GridBagConstraints.HORIZONTAL;
+//        }
         gamePanel.fill = GridBagConstraints.HORIZONTAL;
         gamePanel.weightx = 0.0;
         gamePanel.gridwidth = 3;
         gamePanel.gridx = 0;
         gamePanel.gridy = 1;
-        pane.add(game, gamePanel);
+        pane.add(board, gamePanel);
+        
+        
+//        game.setPreferredSize(new Dimension(400, 600));
+//        game.setBorder(BorderFactory.createBevelBorder(0, Color.ORANGE, Color.RED));
+//        if (shouldFill) {
+//            //natural height, maximum width
+//            gamePanel.fill = GridBagConstraints.HORIZONTAL;
+//        }
+//        gamePanel.fill = GridBagConstraints.HORIZONTAL;
+//        gamePanel.weightx = 0.0;
+//        gamePanel.gridwidth = 3;
+//        gamePanel.gridx = 0;
+//        gamePanel.gridy = 1;
+//        pane.add(game, gamePanel);
 
         // Buttons panel
         btnSave = new JButton("Save");
