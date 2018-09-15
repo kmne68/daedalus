@@ -27,6 +27,8 @@ public class Layout {
     final static boolean shouldFill = true;
     final static boolean shouldWeightX = true;
     final static boolean RIGHT_TO_LEFT = false;
+    private static Board board = new Board();
+    private static JFrame frame = new JFrame();
 
     public static void addComponentsToPane(Container pane) {
         if (RIGHT_TO_LEFT) {
@@ -48,7 +50,7 @@ public class Layout {
 
         // Score panel (displays score)
         JPanel score = new JPanel();
-        score.setPreferredSize(new Dimension(200, 125));
+        score.setPreferredSize(new Dimension(150, 125));
         score.setBorder(BorderFactory.createBevelBorder(0, Color.lightGray, Color.yellow));
         if (shouldWeightX) {
             top.weightx = 0.5;
@@ -60,7 +62,7 @@ public class Layout {
 
         // Graphics panel (displays next piece)
         JPanel graphics = new JPanel();
-        graphics.setPreferredSize(new Dimension(200, 125));
+        graphics.setPreferredSize(new Dimension(150, 125));
         graphics.setBorder(BorderFactory.createBevelBorder(0, Color.black, Color.green));
         if (shouldWeightX) {
             top.weightx = 0.5;
@@ -70,12 +72,8 @@ public class Layout {
         top.gridy = 0;
         pane.add(graphics, top);
 
-        // Game panel
-    //    JPanel game = new JPanel();
-        Board board = new Board();
-        
+    //    Board board = new Board();
         board.setPreferredSize(new Dimension(300, 600));
-        board.addKeyListener(board);
         board.setBorder(BorderFactory.createBevelBorder(0, Color.ORANGE, Color.RED));
 //        if (shouldFill) {
 //            //natural height, maximum width
@@ -88,20 +86,6 @@ public class Layout {
         gamePanel.gridy = 1;
         pane.add(board, gamePanel);
         
-        
-//        game.setPreferredSize(new Dimension(400, 600));
-//        game.setBorder(BorderFactory.createBevelBorder(0, Color.ORANGE, Color.RED));
-//        if (shouldFill) {
-//            //natural height, maximum width
-//            gamePanel.fill = GridBagConstraints.HORIZONTAL;
-//        }
-//        gamePanel.fill = GridBagConstraints.HORIZONTAL;
-//        gamePanel.weightx = 0.0;
-//        gamePanel.gridwidth = 3;
-//        gamePanel.gridx = 0;
-//        gamePanel.gridy = 1;
-//        pane.add(game, gamePanel);
-
         // Buttons panel
         btnSave = new JButton("Save");
         btnQuit = new JButton("Quit");
@@ -111,7 +95,7 @@ public class Layout {
         }
         
         JPanel buttons = new JPanel();
-        buttons.setPreferredSize(new Dimension(400, 125));
+        buttons.setPreferredSize(new Dimension(300, 125));
         buttons.setBorder(BorderFactory.createBevelBorder(0, Color.magenta, Color.cyan));
 
         footer.gridx = 0;
@@ -134,9 +118,9 @@ public class Layout {
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("GridBagLayoutDemo");
+     //   JFrame frame = new JFrame("GridBagLayoutDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        frame.addKeyListener(board);
         //Set up the content pane.
         addComponentsToPane(frame.getContentPane());
 
