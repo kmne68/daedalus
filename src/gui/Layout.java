@@ -120,7 +120,7 @@ public class Layout {
         //Create and set up the window.
      //   JFrame frame = new JFrame("GridBagLayoutDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.addKeyListener(board);
+    //    frame.addKeyListener(board);      // commented out 2018-10-14
         //Set up the content pane.
         addComponentsToPane(frame.getContentPane());
 

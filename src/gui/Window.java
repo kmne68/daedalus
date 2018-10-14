@@ -49,7 +49,7 @@ public class Window {
                
         
     //    window.add(board);
-        window.addKeyListener(board);
+    //    window.addKeyListener(board);     // Commented out 2018-10-14
         
         window.setVisible(true);
 
